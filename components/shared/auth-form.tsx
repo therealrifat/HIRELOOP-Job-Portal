@@ -4,18 +4,54 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 
-import { EyeIcon, EyeOffIcon, Loader2Icon } from "lucide-react"
+import {
+  BriefcaseBusinessIcon,
+  EyeIcon,
+  EyeOffIcon,
+  Loader2Icon,
+  ShieldIcon,
+  UserIcon,
+} from "lucide-react"
 
 import logoImg from "@/app/images/logo.png"
 import { authClient } from "@/lib/auth-client"
 
 type AuthMode = "signin" | "signup"
 
+type Role = "seeker" | "recruiter" | "admin"
+
 type FormData = {
   name: string
   email: string
   password: string
+  role: Role
 }
+
+const roleOptions: Array<{
+  value: Role
+  label: string
+  description: string
+  icon: React.ComponentType<{ className?: string }>
+}> = [
+  {
+    value: "seeker",
+    label: "Job Seeker",
+    description: "Find and apply to jobs",
+    icon: UserIcon,
+  },
+  {
+    value: "recruiter",
+    label: "Recruiter",
+    description: "Post jobs and hire",
+    icon: BriefcaseBusinessIcon,
+  },
+  {
+    value: "admin",
+    label: "Admin",
+    description: "Manage the platform",
+    icon: ShieldIcon,
+  },
+]
 
 function Toggle({ mode }: { mode: AuthMode }) {
   return (
@@ -52,6 +88,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
     name: "",
     email: "",
     password: "",
+    role: "seeker",
   })
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -76,17 +113,16 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
     setIsSubmitting(true)
 
-    // Collect data — replace this block with authClient integration later:
-    //   isSignIn
-    //     ? authClient.signIn.email({ email: form.email, password: form.password })
-    //     : authClient.signUp.email({
-    //         name: form.name, email: form.email, password: form.password,
-    //       })
-    // const data = isSignIn
-    //   ? { email: form.email, password: form.password }
-    //   : { ...form }
-    // console.log(`[${mode}] form data:`, data)
-   const {data, error} = isSignIn ? (await authClient.signIn.email({ email: form.email, password: form.password })): (await authClient.signUp.email({ name: form.name, email: form.email, password: form.password,}))
+    const {data, error} = isSignIn
+      ? await authClient.signIn.email({ email: form.email, password: form.password })
+      : await authClient.signUp.email({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          // role is a better-auth "additionalField" (see lib/auth.ts) —
+          // it needs `input: true` there or the server rejects it
+          role: form.role,
+        })
 
    if(data){
     console.log(data)
@@ -124,25 +160,64 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
       <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
         {!isSignIn && (
-          <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="auth-name"
-              className="text-sm font-medium text-white/80"
-            >
-              Full name
-            </label>
-            <input
-              id="auth-name"
-              name="name"
-              type="text"
-              required
-              autoComplete="name"
-              placeholder="Rifat Islam"
-              value={form.name}
-              onChange={handleChange("name")}
-              className={inputClasses}
-            />
-          </div>
+          <>
+            {/* Role picker */}
+            <fieldset className="flex flex-col gap-1.5">
+              <legend className="text-sm font-medium text-white/80">
+                I'm joining as
+              </legend>
+              <div className="grid grid-cols-3 gap-2">
+                {roleOptions.map((option) => {
+                  const Icon = option.icon
+                  const isActive = form.role === option.value
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      role="radio"
+                      aria-checked={isActive}
+                      title={option.description}
+                      onClick={() =>
+                        setForm((prev) => ({ ...prev, role: option.value }))
+                      }
+                      className={`flex flex-col items-center gap-1 rounded-xl border px-2 py-3 text-center transition-colors ${
+                        isActive
+                          ? "border-indigo-500/60 bg-indigo-500/10 text-white"
+                          : "border-white/10 bg-white/5 text-white/50 hover:border-white/20 hover:text-white/80"
+                      }`}
+                    >
+                      <Icon
+                        className={`size-5 ${isActive ? "text-indigo-400" : "text-white/40"}`}
+                      />
+                      <span className="text-xs font-medium leading-tight">
+                        {option.label}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </fieldset>
+
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="auth-name"
+                className="text-sm font-medium text-white/80"
+              >
+                Full name
+              </label>
+              <input
+                id="auth-name"
+                name="name"
+                type="text"
+                required
+                autoComplete="name"
+                placeholder="Rifat Islam"
+                value={form.name}
+                onChange={handleChange("name")}
+                className={inputClasses}
+              />
+            </div>
+          </>
         )}
 
         <div className="flex flex-col gap-1.5">

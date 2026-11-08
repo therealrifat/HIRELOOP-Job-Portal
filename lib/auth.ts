@@ -10,10 +10,12 @@ export const auth = betterAuth({
     enabled: true,
   },
   user: {
+    // Persists the extra "role" field sent by the signup form
     additionalFields: {
       role: {
-        type: ["skeer" ,"recruiter", "admin"],
-        input: false,
+        type: ["seeker", "recruiter", "admin"] as const,
+        input: true, // must be true, otherwise better-auth rejects the client-provided value
+        defaultValue: "seeker",
       },
     },
   },
