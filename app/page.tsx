@@ -1,11 +1,11 @@
-import Navbar from "@/components/shared/navbar";
-
+import Navbar from "@/components/shared/navbar"
+import Hero from "@/components/shared/hero"
 
 export default function Page() {
   return (
-    <div >
-      <Navbar/>
-      
-    </div>
+    <main className="bg-background min-h-svh">
+      <Navbar />
+      <Hero />
+    </main>
   )
 }
