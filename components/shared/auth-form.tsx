@@ -114,15 +114,15 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
     setIsSubmitting(true)
 
     const {data, error} = isSignIn
-      ? await authClient.signIn.email({ email: form.email, password: form.password })
-      : await authClient.signUp.email({
+      ? (await authClient.signIn.email({ email: form.email, password: form.password }))
+      : (await authClient.signUp.email({
           name: form.name,
           email: form.email,
           password: form.password,
           // role is a better-auth "additionalField" (see lib/auth.ts) —
           // it needs `input: true` there or the server rejects it
           role: form.role,
-        })
+        }))
 
    if(data){
     console.log(data)

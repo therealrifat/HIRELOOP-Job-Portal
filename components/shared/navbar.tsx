@@ -17,6 +17,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import Image from "next/image"
+import { authClient } from '@/lib/auth-client'
 
 
 const navLinks = [
@@ -99,6 +100,11 @@ function MobileNav() {
 }
 
 export default function Navbar() {
+  const handleSignOut = async()=>{
+    await authClient.signOut();
+  }
+
+  const { data: session } = authClient.useSession()
   return (
     <header className="sticky top-0 z-50 w-full p-3 sm:p-4">
       <nav className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between rounded-2xl border border-border/50 bg-card/80 px-4 shadow-sm backdrop-blur-md supports-backdrop-filter:bg-card/60 sm:px-6">
@@ -123,12 +129,22 @@ export default function Navbar() {
               orientation="vertical"
               className="data-vertical:h-5 data-vertical:self-center"
             />
+           {session?.user ? <> 
+            <span>Wellcome , {session?.user.name}</span>
+          <Button
+              className="rounded-full bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600"
+              onClick={handleSignOut}
+            >
+              Sign Out
+            </Button>
+           </>: <>
             <Link
               href="/sign-in"
               className="px-2 text-sm font-medium text-indigo-400 transition-colors hover:text-indigo-300"
             >
               Sign In
             </Link>
+           </>}
             <Button
               className="rounded-full bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600"
               render={<Link href="/get-started" />}
