@@ -50,7 +50,7 @@ Job hunting platform (client). Marketing pages are public; each role gets its ow
 
 ## Pending/quirks
 
-- The dashboard folder was created as `app/dashborad` (misspelled). `middleware.ts` 308-redirects `/dashborad/...` → `/dashboard/...`. Once it is safe to rename the folder (dev server stopped), do the rename and delete `middleware.ts`.
+- Resolved: the dashboard folder misspelling (`app/dashborad`) was renamed to `app/dashboard`, and the temporary redirect `middleware.ts` was deleted.
 - `DashboradSideBar.tsx` derives the menu from `session.user.role`, defaulting to `seeker` while the session loads — gate on `isPending` with a skeleton if the flicker matters.
 - Recruiter "View Applicants" menu item points to a placeholder; the real page is dynamic (`/dashboard/jobs/:jobId/applicants`).
 - Sidebar menu buttons currently render `<a href>` (full reloads); switch to `render={<Link href={item.url} />}` when routes exist.
