@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { createJob } from './../../lib/actions/jobs';
 
 type SelectOption = { value: string; label: string }
 
@@ -44,7 +45,7 @@ const currencies: SelectOption[] = [
   { value: "BDT", label: "BDT (৳)" },
 ]
 
-type JobFormData = {
+export type JobFormData = {
   title: string
   category: string
   type: string
@@ -103,8 +104,11 @@ export default function AddJobForm() {
     //   headers: { "Content-Type": "application/json" },
     //   body: JSON.stringify({ ...form, salaryMin: Number(form.salaryMin), salaryMax: Number(form.salaryMax) }),
     // })
-    const payload = { ...form, status: "active" }
+    const payload: JobFormData & {status: string} = { ...form, status: "active" }
     console.log( payload)
+    const result = await createJob(payload)
+
+    console.log("submit job", result)
 
     await new Promise((resolve) => setTimeout(resolve, 500)) // fake request latency
     setInfo("Job saved (stub) — wire the API call next.")
