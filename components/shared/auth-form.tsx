@@ -114,7 +114,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
     setIsSubmitting(true)
 
     const {data, error} = isSignIn
-      ? (await authClient.signIn.email({ email: form.email, password: form.password }))
+      ? (await authClient.signIn.email({ email: form.email, password: form.password, callbackURL: "/"}))
       : (await authClient.signUp.email({
           name: form.name,
           email: form.email,
@@ -141,7 +141,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
     "w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white outline-none transition-colors placeholder:text-white/30 focus:border-indigo-500/60 focus:bg-white/10"
 
   return (
-    <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md sm:p-8">
+    <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/3 p-6 backdrop-blur-md sm:p-8">
       <div className="mb-6">
         <Link href="/" className="inline-block">
           <Image src={logoImg} alt="HireLoop" className="h-8 w-auto" />
@@ -164,7 +164,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
             {/* Role picker */}
             <fieldset className="flex flex-col gap-1.5">
               <legend className="text-sm font-medium text-white/80">
-                I'm joining as
+                I&apos;m joining as
               </legend>
               <div className="grid grid-cols-3 gap-2">
                 {roleOptions.map((option) => {

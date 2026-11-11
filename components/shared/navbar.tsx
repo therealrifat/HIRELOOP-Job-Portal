@@ -1,5 +1,5 @@
 "use client"
-import logo from '../../app/images/logo.png'
+import logo from "../../app/images/logo.png"
 import Link from "next/link"
 
 import { MenuIcon } from "lucide-react"
@@ -17,24 +17,38 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import Image from "next/image"
-import { authClient } from '@/lib/auth-client'
+import { authClient } from "@/lib/auth-client"
 
+type NavLink = {
+  label: string;
+  href: string;
+};
 
-const navLinks = [
-  { label: "Browse Jobs", href: "/browse-jobs" },
-  { label: "Company", href: "/company" },
-  { label: "Pricing", href: "/pricing" },
-]
+const getNavLinks = (role?: string) => {
+  return [
+    { label: "Browse Jobs", href: "/browse-jobs" },
+    { label: "Company", href: "/company" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "Dashboard", href: `/dashboard/${role}` },
+  ]
+}
+
+// const navLinks = [
+//   { label: "Browse Jobs", href: "/browse-jobs" },
+//   { label: "Company", href: "/company" },
+//   { label: "Pricing", href: "/pricing" },
+// ]
 
 function Logo() {
   return (
     <Link href="/" className="group/logo inline-flex items-center gap-0.5">
-     <Image src={logo} height={100} width={100} alt="logo"/>
+      <Image src={logo} height={100} width={100} alt="logo" />
     </Link>
   )
 }
 
-function MobileNav() {
+function MobileNav({navLinks}:{navLinks:NavLink[]}) {
+
   return (
     <Sheet>
       <SheetTrigger
@@ -54,7 +68,9 @@ function MobileNav() {
           <SheetTitle className="flex items-center text-foreground">
             <SheetClose render={<Logo />} />
           </SheetTitle>
-          <SheetDescription className="sr-only">Hireloop navigation</SheetDescription>
+          <SheetDescription className="sr-only">
+            Hireloop navigation
+          </SheetDescription>
         </SheetHeader>
 
         <nav className="flex flex-col gap-1 px-4">
@@ -74,7 +90,10 @@ function MobileNav() {
             render={
               <Link
                 href="/sign-in"
-                className={buttonVariants({ variant: "outline", className: "w-full" })}
+                className={buttonVariants({
+                  variant: "outline",
+                  className: "w-full",
+                })}
               />
             }
           >
@@ -100,11 +119,16 @@ function MobileNav() {
 }
 
 export default function Navbar() {
-  const handleSignOut = async()=>{
-    await authClient.signOut();
+  const { data: session,} = authClient.useSession()
+
+  const role = session?.user?.role
+
+  const navLinks = getNavLinks(role)
+
+  const handleSignOut = async () => {
+    await authClient.signOut()
   }
 
-  const { data: session } = authClient.useSession()
   return (
     <header className="sticky top-0 z-50 w-full p-3 sm:p-4">
       <nav className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between rounded-2xl border border-border/50 bg-card/80 px-4 shadow-sm backdrop-blur-md supports-backdrop-filter:bg-card/60 sm:px-6">
@@ -129,22 +153,26 @@ export default function Navbar() {
               orientation="vertical"
               className="data-vertical:h-5 data-vertical:self-center"
             />
-           {session?.user ? <> 
-            <span>Wellcome , {session?.user.name}</span>
-          <Button
-              className="rounded-full bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600"
-              onClick={handleSignOut}
-            >
-              Sign Out
-            </Button>
-           </>: <>
-            <Link
-              href="/sign-in"
-              className="px-2 text-sm font-medium text-indigo-400 transition-colors hover:text-indigo-300"
-            >
-              Sign In
-            </Link>
-           </>}
+            {session?.user ? (
+              <>
+                <span>Wellcome , {session?.user.name}</span>
+                <Button
+                  className="rounded-full bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600"
+                  onClick={handleSignOut}
+                >
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/sign-in"
+                  className="px-2 text-sm font-medium text-indigo-400 transition-colors hover:text-indigo-300"
+                >
+                  Sign In
+                </Link>
+              </>
+            )}
             <Button
               className="rounded-full bg-gradient-to-r from-violet-500 to-indigo-500 text-white hover:from-violet-600 hover:to-indigo-600"
               render={<Link href="/get-started" />}
@@ -153,7 +181,7 @@ export default function Navbar() {
             </Button>
           </div>
 
-          <MobileNav />
+          <MobileNav navLinks={navLinks} />
         </div>
       </nav>
     </header>
