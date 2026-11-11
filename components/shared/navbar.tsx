@@ -121,7 +121,7 @@ function MobileNav({navLinks}:{navLinks:NavLink[]}) {
 export default function Navbar() {
   const { data: session,} = authClient.useSession()
 
-  const role = session?.user?.role
+  const role = session?.user?.role || "seeker"
 
   const navLinks = getNavLinks(role)
 

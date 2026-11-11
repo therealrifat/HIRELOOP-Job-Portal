@@ -27,6 +27,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { useSession } from "@/lib/auth-client"
+import Link from "next/link"
 
 type Role = "seeker" | "recruiter" | "admin"
 
@@ -84,7 +85,7 @@ export function DashboradSideBar() {
           <SidebarMenu>
             {items.map((item) => (
               <SidebarMenuItem key={item.name}>
-                <SidebarMenuButton render={<a href={item.url} />}>
+                <SidebarMenuButton render={<Link href={item.url} />}>
                   <item.icon />
                   <span>{item.name}</span>
                 </SidebarMenuButton>
