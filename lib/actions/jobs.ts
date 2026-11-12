@@ -1,4 +1,4 @@
-import { JobFormData } from "@/app/components/AddJobForm"
+import { JobFormData } from "@/types/jobs"
 
 const BASE_URL= process.env.NEXT_PUBLIC_API_BASE_URL
 

@@ -11,7 +11,7 @@ import {
   UsersIcon,
 } from "lucide-react"
 
-import type { JobFormData } from "@/app/components/AddJobForm"
+import type { ManagedJob } from "@/types/jobs"
 import { Button } from "@/components/ui/button"
 import {
   Table,
@@ -25,13 +25,9 @@ import { getJobs } from "@/lib/api/jobs"
 
 import DeleteJobDialog from "./../../../components/deleteJobDialog"
 
-
-// A stored job = the data collected by the Post-a-Job form
-// plus the fields the platform adds on save
-export type ManagedJob = JobFormData & {
-  _id: string
-  
-}
+// Backward-compatible re-export — deleteJobDialog used to import this from here;
+// new code should import from "@/types/jobs"
+export type { ManagedJob } from "@/types/jobs"
 
 
 

@@ -13,7 +13,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { ManagedJob } from "../dashboard/recruiter/jobs/page"
+import { ManagedJob } from "@/types/jobs"
 import { deleteJob } from "@/lib/actions/jobs"
 import { useState } from "react"
 import { toast } from "@/components/ui/toast"

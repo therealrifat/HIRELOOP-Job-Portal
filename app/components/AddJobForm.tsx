@@ -16,12 +16,19 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import type {
+  JobFormData,
+  JobStatus,
+  SelectOption,
+} from "@/types/jobs"
+
+// Re-exported for backward compatibility — new code should import from "@/types/jobs"
+export type { JobFormData, JobStatus } from "@/types/jobs"
+export type Jobstatus = JobStatus // legacy alias (old spelling), kept so nothing breaks
 import { createJob } from "./../../lib/actions/jobs"
 import { toast } from "@/components/ui/toast"
 import { useRouter } from "next/navigation"
 
-
-type SelectOption = { value: string; label: string }
 
 const jobCategories: SelectOption[] = [
   { value: "software-development", label: "Software Development" },
@@ -47,26 +54,6 @@ const currencies: SelectOption[] = [
   { value: "GBP", label: "GBP (£)" },
   { value: "BDT", label: "BDT (৳)" },
 ]
-
-export type Jobstatus = "active" | "closed" | "draft"
-
-export type JobFormData = {
-  title: string
-  category: string
-  type: string
-  salaryMin: string
-  salaryMax: string
-  currency: string
-  location: string
-  remote: boolean
-  deadline: string
-  responsibilities: string
-  requirements: string
-  benefits: string
-  status: Jobstatus
-  applicantsCount: number
-  datePosted: string // ISO date
-}
 
 const initialFormData: JobFormData = {
   title: "",
@@ -137,8 +124,7 @@ export default function AddJobForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {/* Company — auto-filled from the recruiter's registered company */}
-      <fieldset className="rounded-2xl border border-white/10 bg-white/
-      3 p-5">
+      <fieldset className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
         <legend className="px-1 text-sm font-semibold text-white/80">
           Company
         </legend>

@@ -15,20 +15,10 @@ import {
 
 import logoImg from "@/app/images/logo.png"
 import { authClient } from "@/lib/auth-client"
-
-type AuthMode = "signin" | "signup"
-
-type Role = "seeker" | "recruiter" | "admin"
-
-type FormData = {
-  name: string
-  email: string
-  password: string
-  role: Role
-}
+import type { AuthFormData, AuthMode, UserRole } from "@/types/auth"
 
 const roleOptions: Array<{
-  value: Role
+  value: UserRole
   label: string
   description: string
   icon: React.ComponentType<{ className?: string }>
@@ -84,7 +74,7 @@ function Toggle({ mode }: { mode: AuthMode }) {
 
 export default function AuthForm({ mode }: { mode: AuthMode }) {
   const isSignIn = mode === "signin"
-  const [form, setForm] = useState<FormData>({
+  const [form, setForm] = useState<AuthFormData>({
     name: "",
     email: "",
     password: "",
@@ -96,7 +86,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
   const [info, setInfo] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  function handleChange(field: keyof FormData) {
+  function handleChange(field: keyof AuthFormData) {
     return (event: React.ChangeEvent<HTMLInputElement>) =>
       setForm((prev) => ({ ...prev, [field]: event.target.value }))
   }
@@ -113,28 +103,33 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
     setIsSubmitting(true)
 
-    const {data, error} = isSignIn
-      ? (await authClient.signIn.email({ email: form.email, password: form.password, callbackURL: "/"}))
-      : (await authClient.signUp.email({
-          name: form.name,
-          email: form.email,
-          password: form.password,
-          // role is a better-auth "additionalField" (see lib/auth.ts) —
-          // it needs `input: true` there or the server rejects it
-          role: form.role,
-        }))
+    try {
+      const { data, error } = isSignIn
+        ? (await authClient.signIn.email({ email: form.email, password: form.password, callbackURL: "/"}))
+        : (await authClient.signUp.email({
+            name: form.name,
+            email: form.email,
+            password: form.password,
+            // role is a better-auth "additionalField" (see lib/auth.ts) —
+            // it needs `input: true` there or the server rejects it
+            role: form.role,
+          }))
 
-   if(data){
-    console.log(data)
-   }
-   if(error){
-    console.log(error)
-   }
-
-
-
-
-    setIsSubmitting(false)
+      if (data) {
+        console.log(data)
+        setInfo(isSignIn ? "Signed in successfully." : "Account created successfully.")
+      }
+      if (error) {
+        console.log(error)
+        setError(error.message ?? "Something went wrong. Please try again.")
+      }
+    } catch (caught) {
+      // e.g. network failure — without this the button would stay disabled forever
+      console.log(caught)
+      setError("Something went wrong. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const inputClasses =

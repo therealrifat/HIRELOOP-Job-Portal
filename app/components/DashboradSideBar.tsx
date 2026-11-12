@@ -13,7 +13,6 @@ import {
   UsersIcon,
   WalletIcon,
 } from "lucide-react"
-import type { LucideIcon } from "lucide-react"
 
 import {
   Sidebar,
@@ -28,19 +27,10 @@ import {
 } from "@/components/ui/sidebar"
 import { useSession } from "@/lib/auth-client"
 import Link from "next/link"
+import type { UserRole } from "@/types/auth"
+import type { MenuItem } from "@/types/navigation"
 
-type Role = "seeker" | "recruiter" | "admin"
-
-type MenuItem = {
-  /** Display label shown in the sidebar */
-  name: string
-  /** Destination route of the menu item */
-  url: string
-  /** Icon component rendered before the label */
-  icon: LucideIcon
-}
-
-const menuItemsByRole: Record<Role, MenuItem[]> = {
+const menuItemsByRole: Record<UserRole, MenuItem[]> = {
   seeker: [
     { name: "Overview", url: "/dashboard/seeker", icon: LayoutDashboardIcon },
     { name: "Browse Jobs", url: "/dashboard/seeker/jobs", icon: SearchIcon },
@@ -74,7 +64,7 @@ export function DashboradSideBar() {
   const { data: session } = useSession()
   // session.user.role comes from the better-auth "role" additional field;
   // falls back to seeker while session is loading or for guests
-  const role = (session?.user?.role as Role | undefined) ?? "seeker"
+  const role = (session?.user?.role as UserRole | undefined) ?? "seeker"
   const items = menuItemsByRole[role]
 
   return (
