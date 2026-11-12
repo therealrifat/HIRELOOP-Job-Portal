@@ -33,11 +33,7 @@ const getNavLinks = (role?: string) => {
   ]
 }
 
-// const navLinks = [
-//   { label: "Browse Jobs", href: "/browse-jobs" },
-//   { label: "Company", href: "/company" },
-//   { label: "Pricing", href: "/pricing" },
-// ]
+
 
 function Logo() {
   return (

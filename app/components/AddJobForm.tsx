@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import { createJob } from './../../lib/actions/jobs';
+import { createJob } from "./../../lib/actions/jobs"
+import { toast } from "@/components/ui/toast"
 
 type SelectOption = { value: string; label: string }
 
@@ -45,6 +46,8 @@ const currencies: SelectOption[] = [
   { value: "BDT", label: "BDT (৳)" },
 ]
 
+export type Jobstatus = "active" | "closed" | "draft"
+
 export type JobFormData = {
   title: string
   category: string
@@ -58,6 +61,9 @@ export type JobFormData = {
   responsibilities: string
   requirements: string
   benefits: string
+  status: Jobstatus
+  applicantsCount: number
+  datePosted: string // ISO date
 }
 
 const initialFormData: JobFormData = {
@@ -73,6 +79,9 @@ const initialFormData: JobFormData = {
   responsibilities: "",
   requirements: "",
   benefits: "",
+  status: "active",
+  applicantsCount: 0,
+  datePosted: "",
 }
 
 export default function AddJobForm() {
@@ -82,9 +91,8 @@ export default function AddJobForm() {
 
   // one tiny helper drives every text/number field
   function handleChange(field: keyof JobFormData) {
-    return (
-      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => setForm((prev) => ({ ...prev, [field]: event.target.value }))
+    return (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setForm((prev) => ({ ...prev, [field]: event.target.value }))
   }
 
   // same helper, reused by the Selects (they hand us the value directly)
@@ -98,17 +106,20 @@ export default function AddJobForm() {
     setInfo(null)
     setIsSubmitting(true)
 
-    // Collect data — replace this block with the real API call later, e.g.:
-    // await fetch("/api/jobs", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ ...form, salaryMin: Number(form.salaryMin), salaryMax: Number(form.salaryMax) }),
-    // })
-    const payload: JobFormData & {status: string} = { ...form, status: "active" }
-    console.log( payload)
+    const payload: JobFormData & { status: string } = {
+      ...form,
+      status: "active",
+    }
+    // console.log(payload)
     const result = await createJob(payload)
 
-    console.log("submit job", result)
+    // console.log("submit job", result)
+    if (result.insertedId) {
+      toast.add({
+        title: "Job Deleted",
+        description: "Sunday, December 3 at 9:00 AM",
+      })
+    }
 
     await new Promise((resolve) => setTimeout(resolve, 500)) // fake request latency
     setInfo("Job saved (stub) — wire the API call next.")
@@ -284,14 +295,17 @@ export default function AddJobForm() {
 
           <div className="flex flex-col gap-1.5 sm:col-span-2">
             <Label htmlFor="location" className="text-white/80">
-              Location {form.remote ? "(not needed for remote)" : "(City, Country)"}
+              Location{" "}
+              {form.remote ? "(not needed for remote)" : "(City, Country)"}
             </Label>
             <Input
               id="location"
               name="location"
               required={!form.remote}
               disabled={form.remote}
-              placeholder={form.remote ? "Remote — anywhere" : "e.g. Dhaka, Bangladesh"}
+              placeholder={
+                form.remote ? "Remote — anywhere" : "e.g. Dhaka, Bangladesh"
+              }
               value={form.location}
               onChange={handleChange("location")}
               className="bg-input/30 text-white"
@@ -341,7 +355,8 @@ export default function AddJobForm() {
 
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="benefits" className="text-white/80">
-              Benefits <span className="font-normal text-white/40">(optional)</span>
+              Benefits{" "}
+              <span className="font-normal text-white/40">(optional)</span>
             </Label>
             <Textarea
               id="benefits"

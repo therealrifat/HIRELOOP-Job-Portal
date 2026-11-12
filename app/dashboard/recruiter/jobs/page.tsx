@@ -30,9 +30,7 @@ import DeleteJobDialog from "./../../../components/deleteJobDialog"
 // plus the fields the platform adds on save
 export type ManagedJob = JobFormData & {
   _id: string
-  status: "active" | "closed" | "draft"
-  applicantsCount: number
-  datePosted: string // ISO date
+  
 }
 
 

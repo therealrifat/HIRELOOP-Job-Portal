@@ -1,3 +1,4 @@
+"use client"
 import { Trash2Icon } from "lucide-react"
 import {
   AlertDialog,
@@ -12,13 +13,36 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { ManagedJob } from "../dashboard/recruiter/jobs/page";
+import { ManagedJob } from "../dashboard/recruiter/jobs/page"
+import { deleteJob } from "@/lib/actions/jobs"
+import { useState } from "react"
+import { toast } from "@/components/ui/toast"
+import { useRouter } from 'next/navigation'
 
-const DeleteJobDialog = ({job}:{job:ManagedJob}) => {
-    return (
-        <AlertDialog>
+const DeleteJobDialog = ({ job }: { job: ManagedJob }) => {
+  const [open, setOpen] = useState(false)
+  const router = useRouter()
+  const handleDelete = async () => {
+    const res = await deleteJob(job._id)
+    console.log(job._id, res)
+    if (res.deletedCount) {
+      setOpen(false)
+      toast.add({
+        title: "Job Deleted",
+        description: "Sunday, December 3 at 9:00 AM",
+      })
+      router.refresh()
+    }
+  }
+
+  return (
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
-        render={<Button variant="destructive"><Trash2Icon /></Button>}
+        render={
+          <Button variant="destructive">
+            <Trash2Icon />
+          </Button>
+        }
       />
       <AlertDialogContent size="sm">
         <AlertDialogHeader>
@@ -33,11 +57,13 @@ const DeleteJobDialog = ({job}:{job:ManagedJob}) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
-          <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete} variant="destructive">
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-    );
-};
+  )
+}
 
-export default DeleteJobDialog;
+export default DeleteJobDialog
