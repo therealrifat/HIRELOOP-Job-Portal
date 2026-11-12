@@ -18,6 +18,8 @@ import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { createJob } from "./../../lib/actions/jobs"
 import { toast } from "@/components/ui/toast"
+import { useRouter } from "next/navigation"
+
 
 type SelectOption = { value: string; label: string }
 
@@ -89,6 +91,8 @@ export default function AddJobForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [info, setInfo] = useState<string | null>(null)
 
+  const router = useRouter()
+
   // one tiny helper drives every text/number field
   function handleChange(field: keyof JobFormData) {
     return (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -109,16 +113,20 @@ export default function AddJobForm() {
     const payload: JobFormData & { status: string } = {
       ...form,
       status: "active",
+      datePosted: new Date().toISOString().split('T')[0]
     }
-    // console.log(payload)
+
     const result = await createJob(payload)
 
-    // console.log("submit job", result)
+
     if (result.insertedId) {
       toast.add({
-        title: "Job Deleted",
-        description: "Sunday, December 3 at 9:00 AM",
+        title: "Job Create",
+        description: "Job Create Succesfull",
       })
+      router.push("/dashboard/recruiter/jobs")
+
+
     }
 
     await new Promise((resolve) => setTimeout(resolve, 500)) // fake request latency
@@ -129,7 +137,8 @@ export default function AddJobForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {/* Company — auto-filled from the recruiter's registered company */}
-      <fieldset className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+      <fieldset className="rounded-2xl border border-white/10 bg-white/
+      3 p-5">
         <legend className="px-1 text-sm font-semibold text-white/80">
           Company
         </legend>
