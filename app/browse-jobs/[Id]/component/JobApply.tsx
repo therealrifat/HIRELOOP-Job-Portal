@@ -1,6 +1,7 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { applytoAJob } from "@/lib/actions/jobs"
+import { getMyApplicationsCount } from "@/lib/api/jobs"
 import { useSession } from "@/lib/auth-client"
 import { ManagedJob } from "@/types/jobs"
 import { useRouter } from "next/navigation"
@@ -13,6 +14,17 @@ const JobApply = ({ job }: { job: ManagedJob }) => {
     if (!session?.user) {
       router.push(`/sign-in?redirectTo=/browse-jobs/${job._id}`)
     } else if (session.user.role === "seeker") {
+      const countResult = await getMyApplicationsCount(`applicantId=${session?.user.id}`)
+
+
+      if(countResult.counts >= 11){
+        router.push('/payment')
+        return
+
+      }else{
+
+      
+
       const application = {
         jobId: job._id,
         jobTitle: job.title,
@@ -28,8 +40,10 @@ const JobApply = ({ job }: { job: ManagedJob }) => {
 
       const result = await applytoAJob(application)
       if (result.insertedId) {
-        console.log("Application Submitted Successfully")
+        console.log("Application Submitted Successfully", countResult)
+
         router.push("/browse-jobs/")
+      }
       }
     } else {
       console.log("user is not job a seeker")

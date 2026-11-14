@@ -19,3 +19,9 @@ export const getMyApplications =async(query="")=>{
 
 
 }
+export const getMyApplicationsCount =async(query="")=>{
+    const res = await fetch(`${BASE_URL}/applications/counts?${query}`)
+    return res.json()
+
+
+}
