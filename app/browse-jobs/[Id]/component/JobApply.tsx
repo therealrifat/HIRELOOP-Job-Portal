@@ -18,18 +18,22 @@ const JobApply = ({ job }: { job: ManagedJob }) => {
         jobTitle: job.title,
         userId: session.user.id,
         email: session.user.email,
+        status: "applied",
+        companyName: "Kohi Naam Nehi hain",
+        jobLocation: "Remote",
+        jobType: "full-time",
+        dateApplied: "2026-11-14T09:00:00.000Z",
+        lastUpdated: "2026-11-14T09:00:00.000Z",
       }
 
       const result = await applytoAJob(application)
       if (result.insertedId) {
         console.log("Application Submitted Successfully")
-        router.push('/browse-jobs/')
+        router.push("/browse-jobs/")
       }
-
-    }else{
-      console.log('user is not job a seeker')
+    } else {
+      console.log("user is not job a seeker")
     }
-
   }
   return (
     <div>

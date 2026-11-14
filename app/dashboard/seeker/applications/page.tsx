@@ -176,10 +176,10 @@ const MyApplication = async() => {
   const session = await auth.api.getSession({
     headers: await headers() // you need to pass the headers object.
 })
-  const userInfo = session?.user
+
   // TODO: replace with a real fetch — e.g. getMyApplications() filtered by session user
   // const applications = dummyApplications
-  const applications = await getMyApplications(userInfo?.id)
+  const applications = await getMyApplications(`applicantId=${session?.user.id}`)
 
   const totalApplied = applications.length
   const shortlisted = applications.filter((app) => app.status === "shortlisted").length
