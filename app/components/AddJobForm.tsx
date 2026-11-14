@@ -16,11 +16,8 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import type {
-  JobFormData,
-  JobStatus,
-  SelectOption,
-} from "@/types/jobs"
+import type { JobFormData, JobStatus } from "@/types/jobs"
+import { currencies, jobCategories, jobTypes } from "@/lib/job-options"
 
 // Re-exported for backward compatibility — new code should import from "@/types/jobs"
 export type { JobFormData, JobStatus } from "@/types/jobs"
@@ -28,32 +25,6 @@ export type Jobstatus = JobStatus // legacy alias (old spelling), kept so nothin
 import { createJob } from "./../../lib/actions/jobs"
 import { toast } from "@/components/ui/toast"
 import { useRouter } from "next/navigation"
-
-
-const jobCategories: SelectOption[] = [
-  { value: "software-development", label: "Software Development" },
-  { value: "design", label: "Design" },
-  { value: "marketing", label: "Marketing" },
-  { value: "sales", label: "Sales" },
-  { value: "customer-support", label: "Customer Support" },
-  { value: "finance", label: "Finance" },
-  { value: "human-resources", label: "Human Resources" },
-]
-
-const jobTypes: SelectOption[] = [
-  { value: "full-time", label: "Full-time" },
-  { value: "part-time", label: "Part-time" },
-  { value: "remote", label: "Remote" },
-  { value: "contract", label: "Contract" },
-  { value: "internship", label: "Internship" },
-]
-
-const currencies: SelectOption[] = [
-  { value: "USD", label: "USD ($)" },
-  { value: "EUR", label: "EUR (€)" },
-  { value: "GBP", label: "GBP (£)" },
-  { value: "BDT", label: "BDT (৳)" },
-]
 
 const initialFormData: JobFormData = {
   title: "",
