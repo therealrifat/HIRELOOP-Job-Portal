@@ -16,6 +16,7 @@ import {
 import logoImg from "@/app/images/logo.png"
 import { authClient } from "@/lib/auth-client"
 import type { AuthFormData, AuthMode, UserRole } from "@/types/auth"
+import { useSearchParams } from "next/navigation"
 
 const roleOptions: Array<{
   value: UserRole
@@ -90,7 +91,8 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
     return (event: React.ChangeEvent<HTMLInputElement>) =>
       setForm((prev) => ({ ...prev, [field]: event.target.value }))
   }
-
+const searchParams =useSearchParams()
+const redirectTo = searchParams.get('redirectTo') ?? '/'
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
@@ -102,10 +104,11 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
     }
 
     setIsSubmitting(true)
+    
 
     try {
       const { data, error } = isSignIn
-        ? (await authClient.signIn.email({ email: form.email, password: form.password, callbackURL: "/"}))
+        ? (await authClient.signIn.email({ email: form.email, password: form.password, callbackURL: redirectTo}))
         : (await authClient.signUp.email({
             name: form.name,
             email: form.email,

@@ -1,3 +1,4 @@
+
 import Link from "next/link"
 
 import {
@@ -16,6 +17,8 @@ import SaveJobButton from "@/app/components/browse-jobs/SaveJobButton"
 import { getJobById, getJobs } from "@/lib/api/jobs"
 import { jobCategories, jobTypes } from "@/lib/job-options"
 import type { ManagedJob } from "@/types/jobs"
+
+import JobApply from "./component/JobApply"
 
 const monthNames = [
   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -90,6 +93,8 @@ const JobDetailsPage = async ({ params }: { params: Promise<{ Id: string }> }) =
   const { Id } = await params
 
   const job = (await getJobById(Id)) as ManagedJob | null
+ 
+
 
   // API returned nothing/error — show a friendly empty state
   if (!job?._id) {
@@ -193,12 +198,8 @@ const JobDetailsPage = async ({ params }: { params: Promise<{ Id: string }> }) =
               <SaveJobButton jobId={job._id} />
               {/* TODO: apply flow — opens the apply modal / application form.
                   For now it sends guests to sign-in (apply requires login). */}
-              <Link
-                href="/sign-in"
-                className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-indigo-500 px-4 py-2 text-sm font-medium text-white hover:from-violet-600 hover:to-indigo-600"
-              >
-                Apply Now
-              </Link>
+            
+              <JobApply job={job}/>
             </div>
           </div>
         </article>
