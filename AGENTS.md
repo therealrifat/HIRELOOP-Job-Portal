@@ -40,7 +40,7 @@ Job hunting platform (client). Marketing pages are public; each role gets its ow
 - `app/(auth)/` — route group: `/sign-in`, `/sign-up`
 - `app/dashboard/` — role dashboards (layout with SidebarProvider + DashboradSideBar)
 - `lib/auth.ts` — better-auth server config; `lib/auth-client.ts` — browser client
-- `types/` — the single source of truth for shared domain types: `types/auth.ts` (`UserRole`, `AuthMode`, `AuthFormData`), `types/jobs.ts` (`JobStatus`, `JobFormData`, `ManagedJob`, `SelectOption`), `types/navigation.ts` (`MenuItem`). Components may re-export these for convenience but never re-declare them; `app/components/AddJobForm.tsx` keeps a legacy `Jobstatus` alias (old spelling) for backward compatibility.
+- `types/` — the single source of truth for shared domain types: `types/auth.ts` (`UserRole`, `AuthMode`, `AuthFormData`), `types/jobs.ts` (`JobStatus`, `JobFormData`, `ManagedJob`, `SelectOption`), `types/applications.ts` (`ApplicationStatus`, `ApplicationData`, `JobApplication`, `ApplyToJobPayload`), `types/navigation.ts` (`MenuItem`). Components may re-export these for convenience but never re-declare them; `app/components/AddJobForm.tsx` keeps a legacy `Jobstatus` alias (old spelling) for backward compatibility.
 
 ## Better-auth specifics
 

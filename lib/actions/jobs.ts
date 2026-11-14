@@ -1,4 +1,5 @@
 import { JobFormData } from "@/types/jobs"
+import type { ApplyToJobPayload } from "@/types/applications"
 
 const BASE_URL= process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -26,7 +27,7 @@ export const deleteJob = async(jobId: string )=>{
 }
 
 
-export const applytoAJob =async(application)=>{
+export const applytoAJob =async(application: ApplyToJobPayload)=>{
     const res = await fetch(`${BASE_URL}/applications`,{
         method: "POST",
          headers: {
