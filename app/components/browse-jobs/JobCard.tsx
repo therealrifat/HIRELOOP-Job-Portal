@@ -10,6 +10,7 @@ import { jobTypes } from "@/lib/job-options"
 import type { JobStatus, ManagedJob } from "@/types/jobs"
 
 import SaveJobButton from "./SaveJobButton"
+import Link from "next/link"
 
 /** Small pill with an optional leading icon, styled per Figma. */
 function Badge({
@@ -66,6 +67,8 @@ export default function JobCard({ job }: { job: ManagedJob }) {
   const status = statusBadges[job.status]
 
   return (
+   <Link href={`/browse-jobs/${job._id}`} >
+   
     <article className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
       <div className="flex items-start gap-4">
         {/* Company logo placeholder — no company field exists on JobFormData yet */}
@@ -90,5 +93,6 @@ export default function JobCard({ job }: { job: ManagedJob }) {
         <SaveJobButton jobId={job._id} />
       </div>
     </article>
+   </Link>
   )
 }
