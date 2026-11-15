@@ -39,3 +39,19 @@ export const applytoAJob =async(application: ApplyToJobPayload)=>{
     })
     return res.json()
 }
+
+
+
+
+export const checkoutVerify = async(sessionId: string)=>{
+
+    const res = await fetch(`${BASE_URL}/payments/checkout-verify`,{
+        method: "POST",
+        headers:{
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({sessionId})
+    })
+
+    return res.json()
+}
