@@ -25,6 +25,7 @@ export type Jobstatus = JobStatus // legacy alias (old spelling), kept so nothin
 import { createJob } from "./../../lib/actions/jobs"
 import { toast } from "@/components/ui/toast"
 import { useRouter } from "next/navigation"
+import { useSession } from "@/lib/auth-client"
 
 const initialFormData: JobFormData = {
   title: "",
@@ -42,6 +43,7 @@ const initialFormData: JobFormData = {
   status: "active",
   applicantsCount: 0,
   datePosted: "",
+  recruiterId: "",
 }
 
 export default function AddJobForm() {
@@ -62,6 +64,7 @@ export default function AddJobForm() {
     return (value: string | null) =>
       setForm((prev) => ({ ...prev, [field]: value ?? "" }))
   }
+  const { data: session } = useSession()
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -71,11 +74,12 @@ export default function AddJobForm() {
     const payload: JobFormData & { status: string } = {
       ...form,
       status: "active",
-      datePosted: new Date().toISOString().split('T')[0]
+      recruiterId: session?.user.id ?? ("" as string),
+
+      datePosted: new Date().toISOString().split("T")[0],
     }
 
     const result = await createJob(payload)
-
 
     if (result.insertedId) {
       toast.add({
@@ -83,8 +87,6 @@ export default function AddJobForm() {
         description: "Job Create Succesfull",
       })
       router.push("/dashboard/recruiter/jobs")
-
-
     }
 
     await new Promise((resolve) => setTimeout(resolve, 500)) // fake request latency

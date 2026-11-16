@@ -31,6 +31,7 @@ export type JobFormData = {
   status: JobStatus
   applicantsCount: number
   datePosted: string // ISO date
+  recruiterId: string
 }
 
 /** A stored job — the persisted shape plus the Mongo document id */

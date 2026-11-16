@@ -24,6 +24,7 @@ import {
 import { getJobs } from "@/lib/api/jobs"
 
 import DeleteJobDialog from "./../../../components/deleteJobDialog"
+import { getSession } from "@/lib/core/servet"
 
 // Backward-compatible re-export — deleteJobDialog used to import this from here;
 // new code should import from "@/types/jobs"
@@ -47,7 +48,9 @@ const statusStyles: Record<ManagedJob["status"], string> = {
 }
 
 export default async function ManageJobsPage() {
-  const jobs:ManagedJob[] = await getJobs()
+  const session = await getSession()
+console.log(session?.user.id)
+  const jobs:ManagedJob[] = await getJobs(`recruiterId=${session?.user?.id}`)
   // const [jobs, setJobs] = useState<ManagedJob[]>(jobss)
   const activeCount = jobs.filter((job: ManagedJob) => job.status === "active").length
 

@@ -54,14 +54,19 @@ const JobApply = ({ job }: { job: ManagedJob }) => {
         }
       }
     } else {
-      console.log("user is not job a seeker")
+      toast.add({
+        type: "warning",
+          title: "You are not ready for this",
+          description: "Sunday, December 3 at 9:00 AM",
+        })
     }
   }
   return (
     <div>
       <Button
         onClick={handleApply}
-        className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-indigo-500 px-4 py-2 text-sm font-medium text-white hover:from-violet-600 hover:to-indigo-600"
+        disabled={session?.user?.role === "recruiter"}
+        className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-500 to-indigo-500 px-4 py-2 text-sm font-medium text-white hover:from-violet-600 hover:to-indigo-600 cursor-pointer"
       >
         Apply Now
       </Button>
