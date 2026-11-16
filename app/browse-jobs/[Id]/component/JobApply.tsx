@@ -33,6 +33,7 @@ const JobApply = ({ job }: { job: ManagedJob }) => {
           jobId: job._id,
           jobTitle: job.title,
           userId: session.user.id,
+          applicantName: session.user.name,
           email: session.user.email,
           status: "applied",
           companyName: "Kohi Naam Nehi hain",

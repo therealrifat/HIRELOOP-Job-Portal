@@ -36,6 +36,8 @@ export type ApplicationData = {
 export type JobApplication = ApplicationData & {
   _id: string
   status: ApplicationStatus // "applied" on create; recruiter changes it afterwards
+  /** Denormalized user snapshot — the pipeline table shows the applicant name */
+  applicantName?: string
   /** Denormalized job snapshot */
   jobTitle: string
   jobLocation?: string
