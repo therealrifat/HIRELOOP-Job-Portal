@@ -4,6 +4,19 @@
 
 export type UserRole = "seeker" | "recruiter" | "admin"
 
+/** Display projection of a better-auth user for the admin Users table.
+ *  Deliberately not the raw better-auth shape — listUsers returns extra
+ *  fields (image, banned, …) that the UI doesn't need. `createdAt` arrives
+ *  as a Date from auth.api but as an ISO string from serialized sources. */
+export type AdminUser = {
+  id: string
+  name: string
+  email: string
+  role: UserRole
+  createdAt: string | Date
+  emailVerified?: boolean
+}
+
 /** Which auth page the shared AuthForm renders ("signin" | "signup") */
 export type AuthMode = "signin" | "signup"
 
