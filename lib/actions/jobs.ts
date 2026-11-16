@@ -40,6 +40,18 @@ export const applytoAJob =async(application: ApplyToJobPayload)=>{
     return res.json()
 }
 
+// TODO: implement — PATCH the application's status in the DB
+// (e.g. PATCH ${BASE_URL}/applications/:id with { status }).
+// Called by StatusSelect in the recruiter's View Applicants pipeline;
+// until then it only resolves so the UI flow can be built and tested.
+export const updateApplicationStatus = async(
+    applicationId: string,
+    status: string
+)=>{
+    console.log(`[stub] updateApplicationStatus(${applicationId}, ${status})`)
+    return { applicationId, status, updated: false }
+}
+
 
 
 

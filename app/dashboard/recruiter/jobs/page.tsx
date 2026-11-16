@@ -154,7 +154,7 @@ console.log(session?.user.id)
                         size="icon-sm"
                         render={
                           <Link
-                            href={`/dashboard/jobs/${job._id}/applicants`}
+                            href={`/dashboard/recruiter/jobs/${job._id}/applications`}
                           />
                         }
                         aria-label={`View applicants for ${job.title}`}

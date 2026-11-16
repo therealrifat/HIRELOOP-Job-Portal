@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 
 import Pagination from "@/app/components/browse-jobs/Pagination"
+import StatusBadge from "@/app/components/applications/StatusBadge"
 import {
   Table,
   TableBody,
@@ -20,11 +21,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { formatRelative } from "@/lib/format"
 import { jobTypes } from "@/lib/job-options"
-import type {
-  ApplicationStatus,
-  JobApplication,
-} from "@/types/applications"
+import type { JobApplication } from "@/types/applications"
 import { getMyApplications } from "@/lib/api/jobs"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
@@ -113,62 +112,6 @@ const rowDecor = [
 
 const APPLICATIONS_PER_PAGE = 6
 
-
-const monthNames = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-]
-
-function formatDate(iso: string) {
-  const [year, month, day] = iso.split("T")[0].split("-").map(Number)
-  if (!year || !month || !day) return iso
-  return `${monthNames[month - 1]} ${day}, ${year}`
-}
-
-/** Relative format — "2 hours ago", "1 day ago", "1 week ago", "2 weeks ago". */
-function formatRelative(iso: string) {
-  const timestamp = new Date(iso).getTime()
-  if (Number.isNaN(timestamp)) return iso
-  const diffMs = Date.now() - timestamp
-  const diffHours = Math.floor(diffMs / 3_600_000)
-  const diffDays = Math.floor(diffMs / 86_400_000)
-
-  if (diffHours < 1) return "Just now"
-  if (diffHours === 1) return "1 hour ago"
-  if (diffHours < 24) return `${diffHours} hours ago`
-  if (diffDays === 1) return "1 day ago"
-  if (diffDays < 7) return `${diffDays} days ago`
-  if (diffDays < 30) {
-    const weeks = Math.floor(diffDays / 7)
-    return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`
-  }
-  const months = Math.floor(diffDays / 30)
-  return months === 1 ? "1 month ago" : `${months} months ago`
-}
-
-/** Status → pill wording + colors (matches the Figma). */
-const statusBadges: Record<ApplicationStatus, { label: string; className: string }> = {
-  applied: {
-    label: "Applied",
-    className: "border-white/15 bg-white/10 text-white/70",
-  },
-  "under-review": {
-    label: "Review",
-    className: "border-amber-500/40 bg-amber-500/10 text-amber-400",
-  },
-  shortlisted: {
-    label: "Shortlisted",
-    className: "border-sky-600/60 bg-sky-600 text-white",
-  },
-  rejected: {
-    label: "Rejected",
-    className: "border-red-600/60 bg-red-600 text-white",
-  },
-  offered: {
-    label: "Offered",
-    className: "border-emerald-600/60 bg-emerald-600 text-white",
-  },
-}
 
 
 
@@ -272,7 +215,6 @@ const MyApplication = async() => {
               </TableHeader>
               <TableBody>
                 {visibleApplications.map((app, index) => {
-                  const status = statusBadges[app.status]
                   const decor = rowDecor[index % rowDecor.length]
                   const DecorIcon = decor.icon
                   const typeLabel =
@@ -309,11 +251,7 @@ const MyApplication = async() => {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span
-                          className={`inline-flex rounded-full border px-3 py-0.5 text-xs font-medium ${status.className}`}
-                        >
-                          {status.label}
-                        </span>
+                        <StatusBadge status={app.status} />
                       </TableCell>
                       <TableCell className="text-right">
                         <Link

@@ -44,9 +44,9 @@ const menuItemsByRole: Record<UserRole, MenuItem[]> = {
     { name: "My Company", url: "/dashboard/recruiter/company", icon: Building2Icon },
     { name: "Manage Jobs", url: "/dashboard/recruiter/jobs", icon: ClipboardListIcon },
     { name: "Post a Job", url: "/dashboard/recruiter/jobs/new", icon: PlusIcon },
-    // Applicants live on a dynamic route per job: /dashboard/jobs/:jobId/applicants
-    // This item points at the listing below the jobs page for now
-    { name: "View Applicants", url: "/dashboard/recruiter/applicants", icon: UsersIcon },
+    // Applicants live on a dynamic route per job: /dashboard/recruiter/jobs/:jobId/applications
+    // This item points at Manage Jobs, where each job row links to its applicants
+    { name: "View Applicants", url: "/dashboard/recruiter/jobs", icon: UsersIcon },
     { name: "Billing", url: "/dashboard/recruiter/billing", icon: CreditCardIcon },
     { name: "Settings", url: "/dashboard/recruiter/settings", icon: SettingsIcon },
   ],

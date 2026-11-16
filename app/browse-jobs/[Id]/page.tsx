@@ -15,28 +15,17 @@ import {
 import JobCard from "@/app/components/browse-jobs/JobCard"
 import SaveJobButton from "@/app/components/browse-jobs/SaveJobButton"
 import { getJobById, getJobs } from "@/lib/api/jobs"
+import { formatDate } from "@/lib/format"
 import { jobCategories, jobTypes } from "@/lib/job-options"
 import type { ManagedJob } from "@/types/jobs"
 
 import JobApply from "./component/JobApply"
-
-const monthNames = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-]
 
 /** "$60k" for 60000, "$500" for 500 (same style as JobCard). */
 function formatSalary(value: string) {
   const amount = Number(value)
   if (!value || Number.isNaN(amount)) return "—"
   return amount >= 1000 ? `$${Math.round(amount / 1000)}k` : `$${amount}`
-}
-
-function formatDate(iso: string) {
-  if (!iso) return "—"
-  const [year, month, day] = iso.split("T")[0].split("-").map(Number)
-  if (!year || !month || !day) return iso
-  return `${monthNames[month - 1]} ${day}, ${year}`
 }
 
 /** Turns a stored multi-line string into list items. */
