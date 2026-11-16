@@ -23,80 +23,11 @@ import {
 } from "@/components/ui/table"
 import { formatRelative } from "@/lib/format"
 import { jobTypes } from "@/lib/job-options"
-import type { JobApplication } from "@/types/applications"
 import { getMyApplications } from "@/lib/api/jobs"
 import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
 
 
-
-const dummyApplications: JobApplication[] = [
-  {
-    _id: "app_01",
-    jobId: "job_01",
-    userId: "user_me",
-    email: "me@example.com",
-    status: "applied",
-    jobTitle: "Senior Frontend Engineer",
-    companyName: "Stark Industries",
-    jobLocation: "Remote",
-    jobType: "full-time",
-    dateApplied: "2026-11-14T09:00:00.000Z",
-    lastUpdated: "2026-11-14T09:00:00.000Z",
-  },
-  {
-    _id: "app_02",
-    jobId: "job_02",
-    userId: "user_me",
-    email: "me@example.com",
-    status: "under-review",
-    jobTitle: "Product Designer",
-    companyName: "Cyberdyne Systems",
-    jobLocation: "Hybrid",
-    jobType: "contract",
-    dateApplied: "2026-11-13T11:00:00.000Z",
-    lastUpdated: "2026-11-13T11:00:00.000Z",
-  },
-  {
-    _id: "app_03",
-    jobId: "job_03",
-    userId: "user_me",
-    email: "me@example.com",
-    status: "shortlisted",
-    jobTitle: "Lead Data Scientist",
-    companyName: "Wayne Enterprises",
-    jobLocation: "On-site",
-    jobType: "full-time",
-    dateApplied: "2026-11-10T11:00:00.000Z",
-    lastUpdated: "2026-11-12T11:00:00.000Z",
-  },
-  {
-    _id: "app_04",
-    jobId: "job_04",
-    userId: "user_me",
-    email: "me@example.com",
-    status: "rejected",
-    jobTitle: "Cloud Architect",
-    companyName: "Oscorp Tech",
-    jobLocation: "Remote",
-    jobType: "full-time",
-    dateApplied: "2026-11-07T11:00:00.000Z",
-    lastUpdated: "2026-11-09T11:00:00.000Z",
-  },
-  {
-    _id: "app_05",
-    jobId: "job_05",
-    userId: "user_me",
-    email: "me@example.com",
-    status: "offered",
-    jobTitle: "AI Research Engineer",
-    companyName: "Hocil Corp",
-    jobLocation: "Hybrid",
-    jobType: "full-time",
-    dateApplied: "2026-10-31T11:00:00.000Z",
-    lastUpdated: "2026-11-05T11:00:00.000Z",
-  },
-]
 
 
 

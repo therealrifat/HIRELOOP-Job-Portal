@@ -36,11 +36,13 @@ Job hunting platform (client). Marketing pages are public; each role gets its ow
 
 - `components/shared/` — navbar (default export, sticky pill bar), hero, auth-form (`<AuthForm mode="signin" | "signup" />`)
 - `components/ui/` — shadcn primitives (button, sheet, separator, sidebar, …)
-- `app/components/` — project-specific components (DashboradSideBar.tsx)
+- `app/components/` — project-specific components (DashboradSideBar.tsx); `app/components/applications/` holds the applicant-pipeline pieces (`StatusBadge`, `StatusSelect`, `ApplicantsTable`)
 - `app/(auth)/` — route group: `/sign-in`, `/sign-up`
-- `app/dashboard/` — role dashboards (layout with SidebarProvider + DashboradSideBar)
+- `app/dashboard/` — role dashboards (layout with SidebarProvider + DashboradSideBar); recruiter "View Applicants" page is dynamic: `app/dashboard/recruiter/jobs/[Id]/applications/page.tsx` (linked from each Manage Jobs row's eye icon)
 - `lib/auth.ts` — better-auth server config; `lib/auth-client.ts` — browser client
-- `types/` — the single source of truth for shared domain types: `types/auth.ts` (`UserRole`, `AuthMode`, `AuthFormData`), `types/jobs.ts` (`JobStatus`, `JobFormData`, `ManagedJob`, `SelectOption`), `types/applications.ts` (`ApplicationStatus`, `ApplicationData`, `JobApplication`, `ApplyToJobPayload`), `types/navigation.ts` (`MenuItem`). Components may re-export these for convenience but never re-declare them; `app/components/AddJobForm.tsx` keeps a legacy `Jobstatus` alias (old spelling) for backward compatibility.
+- `lib/format.ts` — shared `formatDate` / `formatRelative` (single implementation; don't re-declare date helpers in pages)
+- `lib/job-options.ts` — job categories/types/currencies; `lib/plan-options.ts` — `PLANS` catalog for pricing/billing/payment
+- `types/` — the single source of truth for shared domain types: `types/auth.ts` (`UserRole`, `AuthMode`, `AuthFormData`), `types/jobs.ts` (`JobStatus`, `JobFormData`, `ManagedJob`, `SelectOption`), `types/applications.ts` (`ApplicationStatus`, `ApplicationData`, `JobApplication` incl. optional denormalized `applicantName`, `ApplyToJobPayload`), `types/billing.ts` (`PlanId`, `PlanAudience`, `PlanInfo`), `types/navigation.ts` (`MenuItem`). Components may re-export these for convenience but never re-declare them; `app/components/AddJobForm.tsx` keeps a legacy `Jobstatus` alias (old spelling) for backward compatibility.
 
 ## Better-auth specifics
 
@@ -53,5 +55,6 @@ Job hunting platform (client). Marketing pages are public; each role gets its ow
 
 - Resolved: the dashboard folder misspelling (`app/dashborad`) was renamed to `app/dashboard`, and the temporary redirect `middleware.ts` was deleted.
 - `DashboradSideBar.tsx` derives the menu from `session.user.role`, defaulting to `seeker` while the session loads — gate on `isPending` with a skeleton if the flicker matters.
-- Recruiter "View Applicants" menu item points to a placeholder; the real page is dynamic (`/dashboard/jobs/:jobId/applicants`).
+- Recruiter "View Applicants" menu item points at `/dashboard/recruiter/jobs` (Manage Jobs), whose rows link to the dynamic pipeline page `/dashboard/recruiter/jobs/:jobId/applications`.
+- **Status update is a stub**: `updateApplicationStatus` in `lib/actions/jobs.ts` only logs and resolves — implement the real DB write there (e.g. `PATCH /applications/:id`) and the StatusSelect dropdown in the pipeline goes live. Older applications (seeded before the feature) lack `applicantName` and render their email as the identifier.
 - Sidebar menu buttons currently render `<a href>` (full reloads); switch to `render={<Link href={item.url} />}` when routes exist.
