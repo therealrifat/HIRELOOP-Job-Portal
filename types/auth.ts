@@ -12,7 +12,9 @@ export type AdminUser = {
   id: string
   name: string
   email: string
-  role: UserRole
+  /** additionalField with defaultValue "seeker" at signup — legacy users
+   *  created before the field existed may have no role at all */
+  role?: UserRole
   createdAt: string | Date
   emailVerified?: boolean
 }

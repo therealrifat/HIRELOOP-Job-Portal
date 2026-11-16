@@ -36,13 +36,14 @@ Job hunting platform (client). Marketing pages are public; each role gets its ow
 
 - `components/shared/` — navbar (default export, sticky pill bar), hero, auth-form (`<AuthForm mode="signin" | "signup" />`)
 - `components/ui/` — shadcn primitives (button, sheet, separator, sidebar, …)
-- `app/components/` — project-specific components (DashboradSideBar.tsx); `app/components/applications/` holds the applicant-pipeline pieces (`StatusBadge`, `StatusSelect`, `ApplicantsTable`)
+- `app/components/` — project-specific components (DashboradSideBar.tsx); `app/components/applications/` holds the applicant-pipeline pieces (`StatusBadge`, `StatusSelect`, `ApplicantsTable`); `app/components/admin/` holds the admin users pieces (`RoleBadge`, `RoleSelect`, `UsersTable`)
 - `app/(auth)/` — route group: `/sign-in`, `/sign-up`
 - `app/dashboard/` — role dashboards (layout with SidebarProvider + DashboradSideBar); recruiter "View Applicants" page is dynamic: `app/dashboard/recruiter/jobs/[Id]/applications/page.tsx` (linked from each Manage Jobs row's eye icon)
 - `lib/auth.ts` — better-auth server config; `lib/auth-client.ts` — browser client
-- `lib/format.ts` — shared `formatDate` / `formatRelative` (single implementation; don't re-declare date helpers in pages)
+- `lib/actions/` — mutation fetchers: `jobs.ts` (createJob, deleteJob, applytoAJob, checkoutVerify, `updateApplicationStatus` stub), `users.ts` (`updateUserRole` stub)
+- `lib/format.ts` — shared `formatDate` / `formatRelative` (single implementation; don't re-declare date helpers in pages; both accept `string | Date`)
 - `lib/job-options.ts` — job categories/types/currencies; `lib/plan-options.ts` — `PLANS` catalog for pricing/billing/payment
-- `types/` — the single source of truth for shared domain types: `types/auth.ts` (`UserRole`, `AuthMode`, `AuthFormData`), `types/jobs.ts` (`JobStatus`, `JobFormData`, `ManagedJob`, `SelectOption`), `types/applications.ts` (`ApplicationStatus`, `ApplicationData`, `JobApplication` incl. optional denormalized `applicantName`, `ApplyToJobPayload`), `types/billing.ts` (`PlanId`, `PlanAudience`, `PlanInfo`), `types/navigation.ts` (`MenuItem`). Components may re-export these for convenience but never re-declare them; `app/components/AddJobForm.tsx` keeps a legacy `Jobstatus` alias (old spelling) for backward compatibility.
+- `types/` — the single source of truth for shared domain types: `types/auth.ts` (`UserRole`, `AuthMode`, `AuthFormData`, `AdminUser` — display projection of a better-auth user with optional `role` for legacy users), `types/jobs.ts` (`JobStatus`, `JobFormData`, `ManagedJob`, `SelectOption`), `types/applications.ts` (`ApplicationStatus`, `ApplicationData`, `JobApplication` incl. optional denormalized `applicantName`, `ApplyToJobPayload`), `types/billing.ts` (`PlanId`, `PlanAudience`, `PlanInfo`), `types/navigation.ts` (`MenuItem`). Components may re-export these for convenience but never re-declare them; `app/components/AddJobForm.tsx` keeps a legacy `Jobstatus` alias (old spelling) for backward compatibility.
 
 ## Better-auth specifics
 
@@ -57,4 +58,5 @@ Job hunting platform (client). Marketing pages are public; each role gets its ow
 - `DashboradSideBar.tsx` derives the menu from `session.user.role`, defaulting to `seeker` while the session loads — gate on `isPending` with a skeleton if the flicker matters.
 - Recruiter "View Applicants" menu item points at `/dashboard/recruiter/jobs` (Manage Jobs), whose rows link to the dynamic pipeline page `/dashboard/recruiter/jobs/:jobId/applications`.
 - **Status update is a stub**: `updateApplicationStatus` in `lib/actions/jobs.ts` only logs and resolves — implement the real DB write there (e.g. `PATCH /applications/:id`) and the StatusSelect dropdown in the pipeline goes live. Older applications (seeded before the feature) lack `applicantName` and render their email as the identifier.
+- **Role update is a stub**: `updateUserRole` in `lib/actions/users.ts` only logs and resolves — implement it (better-auth admin API `auth.api.setRole({ userId, role })` with session headers) and the RoleSelect dropdown in `app/dashboard/admin/users` goes live. Admin pages need an admin session; `getUsers` (`auth.api.listUsers`) throws otherwise (the page shows a fallback).
 - Sidebar menu buttons currently render `<a href>` (full reloads); switch to `render={<Link href={item.url} />}` when routes exist.

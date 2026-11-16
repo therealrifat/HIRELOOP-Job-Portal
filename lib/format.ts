@@ -6,18 +6,20 @@ const monthNames = [
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ]
 
-/** ISO date → "Nov 14, 2026". Returns "—" for empty values and the raw
- *  input when it can't be parsed. */
-export function formatDate(iso: string) {
+/** ISO date (or Date) → "Nov 14, 2026". Returns "—" for empty values and
+ *  the raw input when it can't be parsed. */
+export function formatDate(value: string | Date) {
+  const iso = value instanceof Date ? value.toISOString() : value
   if (!iso) return "—"
   const [year, month, day] = iso.split("T")[0].split("-").map(Number)
   if (!year || !month || !day) return iso
   return `${monthNames[month - 1]} ${day}, ${year}`
 }
 
-/** ISO date → relative wording — "Just now", "2 hours ago", "1 day ago",
- *  "1 week ago", "2 months ago". */
-export function formatRelative(iso: string) {
+/** ISO date (or Date) → relative wording — "Just now", "2 hours ago",
+ *  "1 day ago", "1 week ago", "2 months ago". */
+export function formatRelative(value: string | Date) {
+  const iso = value instanceof Date ? value.toISOString() : value
   const timestamp = new Date(iso).getTime()
   if (Number.isNaN(timestamp)) return iso
   const diffMs = Date.now() - timestamp
