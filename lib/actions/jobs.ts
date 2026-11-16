@@ -46,10 +46,18 @@ export const applytoAJob =async(application: ApplyToJobPayload)=>{
 // until then it only resolves so the UI flow can be built and tested.
 export const updateApplicationStatus = async(
     applicationId: string,
-    status: string
+   data:{ status: string}
 )=>{
-    console.log(`[stub] updateApplicationStatus(${applicationId}, ${status})`)
-    return { applicationId, status, updated: false }
+    console.log(data)
+    const response = await fetch(`${BASE_URL}/applications/${applicationId}`,{
+        method: "PATCH",
+        headers:{
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    return response.json()
+    
 }
 
 

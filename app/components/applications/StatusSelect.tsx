@@ -30,8 +30,10 @@ export default function StatusSelect({ applicationId, status }: Props) {
 
   async function handleStatusChange(nextStatus: ApplicationStatus) {
     setCurrentStatus(nextStatus)
+    
     setIsSaving(true)
-    await updateApplicationStatus(applicationId, nextStatus)
+    const resutl =await updateApplicationStatus(applicationId, {status: nextStatus})
+    console.log(resutl)
     setIsSaving(false)
   }
 
