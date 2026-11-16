@@ -2,6 +2,8 @@ const BASE_URL= process.env.NEXT_PUBLIC_API_BASE_URL
 
 import type { JobApplication } from "@/types/applications"
 
+
+
 export const getJobs = async(quary="")=>{
     console.log("text",quary)
     const res = await fetch(`${BASE_URL}/jobs?${quary}`)

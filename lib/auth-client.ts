@@ -1,5 +1,5 @@
 import { createAuthClient } from "better-auth/react"
-import { inferAdditionalFields } from "better-auth/client/plugins"
+import { adminClient, inferAdditionalFields } from "better-auth/client/plugins"
 
 // Type-only import: keeps the server code (MongoDB client) out of the client
 // bundle while letting the client types know about server additional fields,
@@ -7,9 +7,10 @@ import { inferAdditionalFields } from "better-auth/client/plugins"
 import type { auth } from "@/lib/auth"
 
 export const authClient = createAuthClient({
+    
     /** base URL is optional when the API runs on the same domain (/api/auth) */
     baseURL: process.env.BETTER_AUTH_URL,
-    plugins: [inferAdditionalFields<typeof auth>()],
+    plugins: [inferAdditionalFields<typeof auth>(),adminClient()],
 })
 
 export const { signIn, signUp, useSession } = authClient
